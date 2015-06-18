@@ -11,7 +11,7 @@
   },
   "autoload": {
     "psr-4": {
-      "JsonConfig": "src/"
+      "JsonConfig\\": "src/"
     }
   }
 }
