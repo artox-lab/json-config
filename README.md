@@ -48,3 +48,7 @@ JsonConfig\Config::setup('config.json');
 $subscriptions = JsonConfig\Config::get('emails.subscription');
 
 ```
+
+## *TODO*
+
+* Tests
