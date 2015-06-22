@@ -1,11 +1,22 @@
 <?php namespace JsonConfig;
 
+/**
+ * Class Config
+ *
+ * Статический класс для чтения конфигов в JSON-формате
+ *
+ * @package JsonConfig
+ */
 class Config
 {
+    // Символ, который необходим для вложенности ключей
     const KEY_SEPARATOR = '.';
 
-    private $config = [];
+    /** @var Config */
     private static $instance = null;
+
+    /** @var array  */
+    private $config = [];
 
     /**
      * Функция устанавливает настройки для конфига
@@ -40,7 +51,16 @@ class Config
         {
             self::$instance = new Config();
         }
+
         return self::$instance;
+    }
+
+    private function __clone()
+    {
+    }
+
+    private function __construct()
+    {
     }
 
     /**
@@ -89,6 +109,8 @@ class Config
         foreach ($config as $key => $value)
         {
             $keyPath = $baseKeyPath . $key;
+
+            // Если значение - массив и при этом он ассоциативный - нормализуем его и мержим с текущими значениями конфига
             if (is_array($value) && self::isAssociativeArray($value))
             {
                 $normalizedConfig = array_merge($normalizedConfig, $this->normalizeConfig($value, $keyPath . self::KEY_SEPARATOR));
