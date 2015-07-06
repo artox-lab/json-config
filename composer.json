@@ -1,5 +1,8 @@
 {
   "name": "artox-lab/json-config",
+  "type": "library",
+  "description": "Yet Another JSON config for PHP",
+  "keywords": ["json", "config", "php"],
   "authors": [
     {
       "name": "Ivanenko Dmitry",
@@ -7,7 +10,10 @@
     }
   ],
   "require": {
-    "php": ">=5.3.0"
+    "php": ">=5.5.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.*"
   },
   "autoload": {
     "psr-4": {

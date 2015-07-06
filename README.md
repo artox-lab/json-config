@@ -1,16 +1,18 @@
 # JSON Config
 
+![Build Status](http://teamcity.rlx.by/app/rest/builds/buildType:(id:JsonConfig_Master)/statusIcon?guest=1)
+
 ## Installation via Composer
 
 ```json
 {
     "require": {
-        "artox-lab/json-config": "1.0"
+        "artox-lab/json-config": "1.1"
     }
 }
 ```
 
-run ```composer update```
+Run ```composer update```
 
 ## Config Definition
 
@@ -18,18 +20,22 @@ run ```composer update```
 
 ```json
 {
-    "name": "Suppa Project",
-    "version": 1,
-    "authors": [
-    	"code.god@gmail.com"
+  "name": "Suppa Project",
+  "version": 1,
+  "rating": 2.5,
+  "authors": [
+    "code.god@gmail.com"
+  ],
+  "emails": {
+    "subscription": [
+      "user1@gmail.com",
+      "user2@gmail.com"
     ],
-    "emails": {
-    	"subscription": [
-    		"user1@gmail.com",
-    		"user2@gmail.com"
-    	],
-    	"should_notify": true
-    }
+    "user": {
+      "name": "Johny"
+    },
+    "should_notify": true
+  }
 }
 ```
 
@@ -48,7 +54,3 @@ JsonConfig\Config::setup('config.json');
 $subscriptions = JsonConfig\Config::get('emails.subscription');
 
 ```
-
-## *TODO*
-
-* Tests

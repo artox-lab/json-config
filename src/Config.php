@@ -39,6 +39,7 @@ class Config
      */
     public static function get($keyPath)
     {
+        $keyPath = strtolower($keyPath);
         return (isset(self::getInstance()->config[$keyPath])) ? self::getInstance()->config[$keyPath] : false;
     }
 
@@ -84,7 +85,7 @@ class Config
         // Если не удалось распарсить - кидаем ошибку
         if (empty($this->config))
         {
-            throw new \Exception(json_last_error_msg());
+            throw new \Exception('Не удается распарсить JSON');
         }
 
         // Убираем вложенность у конфига
@@ -117,7 +118,7 @@ class Config
             }
             else
             {
-                $normalizedConfig[$keyPath] = $value;
+                $normalizedConfig[strtolower($keyPath)] = $value;
             }
         }
 

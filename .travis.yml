@@ -1,0 +1,16 @@
+language: php
+
+php:
+ - 5.5
+ - 5.6
+
+before_script:
+ - composer self-update
+ - composer install --prefer-source --no-interaction
+ - composer require satooshi/php-coveralls:~0.6@stable
+
+script:
+ - phpunit --coverage-clover build/logs/clover.xml
+
+after_success:
+ - php vendor/bin/coveralls -v
