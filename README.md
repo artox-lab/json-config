@@ -1,7 +1,5 @@
 # JSON Config
 
-![Build Status](http://teamcity.rlx.by/app/rest/builds/buildType:(id:JsonConfig_Master)/statusIcon?guest=1)
-
 ## Installation via Composer
 
 ```json
