@@ -51,10 +51,11 @@ class Config
         {
             $keyParts = explode(self::KEY_SEPARATOR, $keyPath);
             $config = $configInstance->config;
+
             while (!empty($keyParts) && isset($config[$keyParts[0]]))
             {
                 $config = $config[$keyParts[0]];
-                $keyParts = array_shift($keyParts);
+                array_shift($keyParts);
             }
 
             if (empty($keyParts))

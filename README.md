@@ -5,7 +5,7 @@
 ```json
 {
     "require": {
-        "artox-lab/json-config": "1.3"
+        "artox-lab/json-config": "1.3.1"
     }
 }
 ```

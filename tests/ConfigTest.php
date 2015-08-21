@@ -60,7 +60,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
         $this->assertFalse(\JsonConfig\Config::get('emails:subscription'));
 
-        $this->assertFalse(\JsonConfig\Config::get('emails.user'));
+        $this->assertEquals(['name' => 'Johny'], \JsonConfig\Config::get('emails.user'));
     }
 
     public function testGetValueType()
