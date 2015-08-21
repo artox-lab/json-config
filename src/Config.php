@@ -17,6 +17,7 @@ class Config
 
     /** @var array  */
     private $config = [];
+    private $normalizedConfig = [];
 
     /**
      * Функция устанавливает настройки для конфига
@@ -40,7 +41,29 @@ class Config
     public static function get($keyPath)
     {
         $keyPath = strtolower($keyPath);
-        return (isset(self::getInstance()->config[$keyPath])) ? self::getInstance()->config[$keyPath] : false;
+        $configInstance = self::getInstance();
+
+        if (isset($configInstance->normalizedConfig[$keyPath]))
+        {
+            return $configInstance->normalizedConfig[$keyPath];
+        }
+        else
+        {
+            $keyParts = explode(self::KEY_SEPARATOR, $keyPath);
+            $config = $configInstance->config;
+            while (!empty($keyParts) && isset($config[$keyParts[0]]))
+            {
+                $config = $config[$keyParts[0]];
+                $keyParts = array_shift($keyParts);
+            }
+
+            if (empty($keyParts))
+            {
+                return $config;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -85,7 +108,7 @@ class Config
         }
 
         // Убираем вложенность у конфига
-        $this->config = $this->normalizeConfig($this->config);
+        $this->normalizedConfig = self::normalizeConfig($this->config);
     }
 
     /**
@@ -98,7 +121,7 @@ class Config
      *
      * @return array
      */
-    private function normalizeConfig($config, $baseKeyPath = '')
+    private static function normalizeConfig($config, $baseKeyPath = '')
     {
         // Инициализируем результирующий массив
         $normalizedConfig = [];
@@ -110,7 +133,7 @@ class Config
             // Если значение - массив и при этом он ассоциативный - нормализуем его и мержим с текущими значениями конфига
             if (is_array($value) && self::isAssociativeArray($value))
             {
-                $normalizedConfig = array_merge($normalizedConfig, $this->normalizeConfig($value, $keyPath . self::KEY_SEPARATOR));
+                $normalizedConfig = array_merge($normalizedConfig, self::normalizeConfig($value, $keyPath . self::KEY_SEPARATOR));
             }
             else
             {

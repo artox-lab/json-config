@@ -77,5 +77,6 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
         $this->assertInternalType('array', \JsonConfig\Config::get('authors'));
         $this->assertInternalType('array', \JsonConfig\Config::get('emails.subscription'));
+        $this->assertInternalType('array', \JsonConfig\Config::get('emails'));
     }
 }
