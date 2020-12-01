@@ -148,7 +148,7 @@ class Config
                     } else if ($env === 'true') {
                         $value = true;
                     } else if (is_numeric($env) === true) {
-                        $value = (((int) $env == $env) ? (int) $env : (float) $env);
+                        $value = (((string) (int) $env === $env) ? (int) $env : (float) $env);
                     } else {
                         $value = $env;
                     }
