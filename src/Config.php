@@ -138,6 +138,22 @@ class Config
             }
             else
             {
+                $env = getenv(
+                    str_replace(['.', ':', '-'], '_', strtoupper($keyPath))
+                );
+
+                if ($env !== false) {
+                    if ($env === 'false') {
+                        $value = false;
+                    } else if ($env === 'true') {
+                        $value = true;
+                    } else if (is_numeric($env) === true) {
+                        $value = (((int) $env == $env) ? (int) $env : (float) $env);
+                    } else {
+                        $value = $env;
+                    }
+                }
+
                 $normalizedConfig[strtolower($keyPath)] = $value;
             }
         }
