@@ -138,9 +138,9 @@ class Config
             }
             else
             {
-                $env = getenv(
-                    str_replace(['.', ':', '-'], '_', strtoupper($keyPath))
-                );
+                $envKey = str_replace(['.', ':', '-'], '_', strtoupper($keyPath));
+
+                $env = $_ENV[$envKey] ?? $_SERVER[$envKey] ?? getenv($envKey);
 
                 if ($env !== false) {
                     if ($env === 'false') {
