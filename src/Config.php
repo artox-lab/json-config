@@ -108,8 +108,75 @@ class Config
             throw new \Exception('Не удается распарсить JSON');
         }
 
+        // Загружаем значения из переменных окружения.
+        $this->config = $this->loadEnv($this->config);
+
         // Убираем вложенность у конфига
         $this->normalizedConfig = self::normalizeConfig($this->config);
+    }
+
+    /**
+     * Функция заменяет значения в конфиги переменными из окружения
+     *
+     * @param array  $config      Конфиг
+     * @param string $baseKeyPath Вложенность конфига
+     *
+     * @return array
+     */
+    private function loadEnv(array $config, string $baseKeyPath = '') : array
+    {
+        foreach ($config as $key => $value) {
+            $keyPath = $baseKeyPath . $key;
+
+            if (is_array($value) === true && self::isAssociativeArray($value)) {
+                $config[$key] = $this->loadEnv($value, $keyPath . self::KEY_SEPARATOR);
+                continue;
+            }
+
+            $config[$key] = $this->getEnv($keyPath, $value);
+        }
+
+        return $config;
+    }
+
+    /**
+     * Функция получает значение переменной окружения для параметра в конфиге
+     *
+     * @param string $keyPath Название параметра в конфиге (например: urls.base.host)
+     * @param mixed  $value   Значение конфига
+     *
+     * @return array|bool|false|float|int|mixed|string
+     */
+    private function getEnv(string $keyPath, $value)
+    {
+        $envKey = str_replace(['.', ':', '-'], '_', strtoupper($keyPath));
+
+        $env = $_ENV[$envKey] ?? $_SERVER[$envKey] ?? getenv($envKey);
+
+        // Если в переменных окружения значение не найдено, возвращаем значение.
+        if ($env === false) {
+            return $value;
+        }
+
+        // Если значение параметра конфига является массивом, то и в переменной окружения будет передан массив,
+        // в случае с переменными окружения это json.
+        if (is_array($value) === true) {
+            $env = json_decode($env, true);
+        }
+
+        // Приведение строк к скалярным типам.
+        if ($env === 'false') {
+            $value = false;
+        } else if ($env === 'true') {
+            $value = true;
+        } else if (is_numeric($env) === true) {
+            // int к int, float к float.
+            $value = (((string) (int) $env === $env) ? (int) $env : (float) $env);
+        } else {
+            $value = $env;
+        }
+
+        return $value;
     }
 
     /**
@@ -138,22 +205,6 @@ class Config
             }
             else
             {
-                $envKey = str_replace(['.', ':', '-'], '_', strtoupper($keyPath));
-
-                $env = $_ENV[$envKey] ?? $_SERVER[$envKey] ?? getenv($envKey);
-
-                if ($env !== false) {
-                    if ($env === 'false') {
-                        $value = false;
-                    } else if ($env === 'true') {
-                        $value = true;
-                    } else if (is_numeric($env) === true) {
-                        $value = (((string) (int) $env === $env) ? (int) $env : (float) $env);
-                    } else {
-                        $value = $env;
-                    }
-                }
-
                 $normalizedConfig[strtolower($keyPath)] = $value;
             }
         }
